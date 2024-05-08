@@ -1,31 +1,29 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState } from "react";
 import styles from "./SignUp.module.css";
+import { useFormik } from "formik";
+import { signupSchema } from "../schema/formSchema";
+import { Link } from "react-router-dom";
 
 const SignUp = () => {
-  const [values, setValues] = useState({
-    name: "",
-    userName: "",
-    number: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
+  const handleSubmit = (values, { resetForm }) => {
+    resetForm();
+  };
+
+  const formik = useFormik({
+    initialValues: {
+      name: "",
+      userName: "",
+      phoneNumber: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+    },
+    validationSchema: signupSchema,
+    onSubmit: handleSubmit,
   });
-  const [errors, setErrors] = useState({
-    name: "",
-    userName: "",
-    number: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
+
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
-  const handleValues = (e) => {
-    const { name, value } = e.target;
-    setValues((prevValues) => ({ ...prevValues, [name]: value }));
-  };
 
   const handlePasswordToggle = () => {
     setShowPassword((prev) => !prev);
@@ -35,124 +33,140 @@ const SignUp = () => {
     setShowConfirmPassword((prev) => !prev);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-  };
-
   return (
-    <form className={styles.form} onSubmit={handleSubmit}>
+    <form className={styles.form} onSubmit={formik.handleSubmit}>
       <div className={styles["group-name"]}>
-        <label htmlFor="name" className={styles.label}>
-          Name*
-        </label>
-        <input
-          id="name"
-          type="text"
-          name="name"
-          className={styles.input}
-          value={values.name}
-          placeholder="Enter your name"
-          onChange={handleValues}
-        />
-        {errors.name ? <span className={styles.error}>*Name must be not empty</span> : null}
+        <div className={styles.name}>
+          <label htmlFor="name" className={styles.label}>
+            Name
+          </label>
+          <input
+            id="name"
+            name="name"
+            type="text"
+            placeholder="Enter your name"
+            className={styles.input}
+            value={formik.values.name}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+          />
+        </div>
+        {formik.touched.name && formik.errors.name ? (
+          <span className={styles.error}>Name must be not empty</span>
+        ) : null}
       </div>
       <div className={styles["group-username"]}>
-        <label htmlFor="username" className={styles.label}>
-          User Name*
-        </label>
-        <input
-          id="username"
-          type="text"
-          name="userName"
-          className={styles.input}
-          value={values.userName}
-          placeholder="Enter your user name"
-          onChange={handleValues}
-        />
-        {errors.userName ? (
-          <span className={styles.error}>*User name must be not empty</span>
+        <div className={styles.username}>
+          <label htmlFor="username" className={styles.label}>
+            Username
+          </label>
+          <input
+            id="userName"
+            name="userName"
+            type="text"
+            placeholder="Enter your username"
+            className={styles.input}
+            value={formik.values.userName}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+          />
+        </div>
+        {formik.touched.userName && formik.errors.userName ? (
+          <span className={styles.error}>Username must be not empty</span>
         ) : null}
       </div>
       <div className={styles["group-number"]}>
-        <label htmlFor="number" className={styles.label}>
-          Phone Number*
-        </label>
-        <input
-          id="number"
-          type="text"
-          name="number"
-          className={styles.input}
-          value={values.number}
-          placeholder="Enter your phone number"
-          onChange={handleValues}
-        />
-        {errors.number ? (
-          <span className={styles.error}>*Phone number must be of 10 digits</span>
+        <div className={styles.number}>
+          <label htmlFor="number" className={styles.label}>
+            Phone Number
+          </label>
+          <input
+            id="phoneNumber"
+            name="phoneNumber"
+            type="text"
+            placeholder="Enter your phone number"
+            className={styles.input}
+            value={formik.values.phoneNumber}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+          />
+        </div>
+        {formik.touched.phoneNumber && formik.errors.phoneNumber ? (
+          <span className={styles.error}>Phone number must be of 10 digits</span>
         ) : null}
       </div>
       <div className={styles["group-email"]}>
-        <label htmlFor="email" className={styles.label}>
-          Email*
-        </label>
-        <input
-          id="email"
-          type="text"
-          name="email"
-          className={styles.input}
-          value={values.email}
-          placeholder="Enter your email"
-          onChange={handleValues}
-        />
-        {errors.email ? (
-          <span className={styles.error}>*Should follow the pattern abc@xyz.com</span>
+        <div className={styles.email}>
+          <label htmlFor="email" className={styles.label}>
+            Email
+          </label>
+          <input
+            id="email"
+            name="email"
+            type="text"
+            placeholder="Enter your email"
+            className={styles.input}
+            value={formik.values.email}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+          />
+        </div>
+        {formik.touched.email && formik.errors.email ? (
+          <span className={styles.error}>Should follow the pattern abc@xyz.com</span>
         ) : null}
       </div>
       <div className={styles["group-password"]}>
-        <label htmlFor="password" className={styles.label}>
-          Password*
-        </label>
-        <input
-          id="password"
-          type={showPassword ? "text" : "password"}
-          name="password"
-          className={styles.input}
-          value={values.password}
-          placeholder="Enter your password"
-          onChange={handleValues}
-        />
-        <img
-          src={showPassword ? "/hide.svg" : "/show.svg"}
-          alt="Show password"
-          className={styles.icon}
-          onClick={handlePasswordToggle}
-        />
-        {errors.password ? (
+        <div className={styles.password}>
+          <label htmlFor="password" className={styles.label}>
+            Password
+          </label>
+          <input
+            id="password"
+            name="password"
+            type={showPassword ? "text" : "password"}
+            placeholder="Enter your password"
+            className={styles.input}
+            value={formik.values.password}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+          />
+          <img
+            src={showPassword ? "/hide.svg" : "/show.svg"}
+            alt="Show password"
+            className={styles.icon}
+            onClick={handlePasswordToggle}
+          />
+        </div>
+        {formik.touched.password && formik.errors.password ? (
           <span className={styles.error}>
-            *Should be at least 8 characters with one special character and one capital alphabet
+            Should be at least 8 characters with one special character and one capital alphabet
           </span>
         ) : null}
       </div>
       <div className={styles["group-confirm-password"]}>
-        <label htmlFor="confirm-password" className={styles.label}>
-          Confirm Password*
-        </label>
-        <input
-          id="confirm-password"
-          type={showConfirmPassword ? "text" : "password"}
-          name="confirmPassword"
-          className={styles.input}
-          value={values.confirmPassword}
-          placeholder="Re-enter your password"
-          onChange={handleValues}
-        />
-        <img
-          src={showConfirmPassword ? "/hide.svg" : "/show.svg"}
-          alt="Show confirm password"
-          className={styles.icon}
-          onClick={handleConfirmPasswordToggle}
-        />
-        {errors.confirmPassword ? (
-          <span className={styles.error}>*Should match with password</span>
+        <div className={styles["confirm-password"]}>
+          <label htmlFor="confirm-password" className={styles.label}>
+            Confirm Password
+          </label>
+          <input
+            id="confirmPassword"
+            name="confirmPassword"
+            type={showConfirmPassword ? "text" : "password"}
+            placeholder="Re-enter your password"
+            className={styles.input}
+            value={formik.values.confirmPassword}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+          />
+          <img
+            src={showConfirmPassword ? "/hide.svg" : "/show.svg"}
+            alt="Show confirm password"
+            className={styles.icon}
+            onClick={handleConfirmPasswordToggle}
+          />
+        </div>
+        {formik.touched.confirmPassword && formik.errors.confirmPassword ? (
+          <span className={styles.error}>Should match with password</span>
         ) : null}
       </div>
       <div className={styles.cta}>
